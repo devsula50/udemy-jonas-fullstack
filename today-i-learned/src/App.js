@@ -53,13 +53,22 @@ const App = () => {
 
   const addFactHandler = (newFact) => {
     // setFacts((prevFacts) => [...prevFacts, newFact]);
-    setFacts((prevFacts) => prevFacts.concat(newFact));
+    setFacts((prevFacts) => {
+      newFact.id = prevFacts.length;
+      return prevFacts.concat(newFact);
+    });
   };
 
   return (
     <>
       <Header showForm={showForm} setShowForm={setShowForm} />
-      {showForm ? <NewFactForm onAddFact={addFactHandler} /> : null}
+      {showForm ? (
+        <NewFactForm
+          onAddFact={addFactHandler}
+          showForm={showForm}
+          setShowForm={setShowForm}
+        />
+      ) : null}
       <main className={"main"}>
         <CategoryFilter />
         <FactList facts={facts} />
@@ -90,7 +99,19 @@ const Header = ({ showForm, setShowForm }) => {
   );
 };
 
-const NewFactForm = ({ onAddFact }) => {
+function isValidHttpUrl(string) {
+  let url;
+
+  try {
+    url = new URL(string);
+  } catch (_) {
+    return false;
+  }
+
+  return url.protocol === "http:" || url.protocol === "https:";
+}
+
+const NewFactForm = ({ onAddFact, showForm, setShowForm }) => {
   const [text, setText] = useState("");
   const [source, setSource] = useState("");
   const [category, setCategory] = useState("");
@@ -98,28 +119,42 @@ const NewFactForm = ({ onAddFact }) => {
   const changeTextHandler = (event) => {
     setText(event.target.value);
   };
-
   const changeSourceHandler = (event) => {
     setSource(event.target.value);
   };
-
   const changeCategoryHandler = (event) => {
     setCategory(event.target.value);
   };
 
   const submitFormHandler = (event) => {
+    // 1. Prevent browser reload
     event.preventDefault();
+
+    // 2. Check if data is valid. If so, create a new fact
+    if (!(text && isValidHttpUrl(source) && category && text.length <= 200))
+      return;
+
+    // 3. Create a new fact object
     const newFact = {
-      id: initialFacts.length,
       text: text,
       source: source,
       category: category,
       votesInteresting: 0,
       votesMindblowing: 0,
       votesFalse: 0,
-      createdIn: Date.now(),
+      createdIn: new Date().getFullYear(),
     };
+
+    // 4. Add the new fact to the UI: add to fact to state
     onAddFact(newFact);
+
+    // 5. Reset input fields
+    setText("");
+    setSource("");
+    setCategory("Choose category:");
+
+    // 6. Close the form
+    setShowForm((showForm) => !showForm);
   };
 
   return (
