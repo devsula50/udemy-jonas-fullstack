@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from "react";
 
-import './style.css'
+import "./style.css";
 
 const CATEGORIES = [
   { name: "technology", color: "#3b82f6" },
@@ -48,35 +48,109 @@ const initialFacts = [
 ];
 
 const App = () => {
-  const appTitle = "Today I Learned"
+  const [facts, setFacts] = useState([...initialFacts]);
+  const [showForm, setShowForm] = useState(false);
+
+  const addFactHandler = (newFact) => {
+    // setFacts((prevFacts) => [...prevFacts, newFact]);
+    setFacts((prevFacts) => prevFacts.concat(newFact));
+  };
 
   return (
     <>
-      {/* HEADER */}
-      <header className="header">
-        <div className="logo">
-          <img
-            src="logo.png"
-            alt="Today I Learned Logo"
-          />
-          <h1>{appTitle}</h1>
-        </div>
-        <button className="btn btn-large btn-open">Share a fact</button>
-      </header>
-
-      <NewFactForm />
-
+      <Header showForm={showForm} setShowForm={setShowForm} />
+      {showForm ? <NewFactForm onAddFact={addFactHandler} /> : null}
       <main className={"main"}>
         <CategoryFilter />
-        <FactList />
+        <FactList facts={facts} />
       </main>
     </>
-  )
-}
+  );
+};
 
-const NewFactForm = () => {
-  return <form className={"fact-form"}>Fact form</form>
-}
+const Header = ({ showForm, setShowForm }) => {
+  const appTitle = "Today I Learned";
+
+  const formButtonClickHandler = () => {
+    setShowForm((showForm) => !showForm);
+  };
+  return (
+    <header className="header">
+      <div className="logo">
+        <img src="logo.png" alt="Today I Learned Logo" />
+        <h1>{appTitle}</h1>
+      </div>
+      <button
+        className="btn btn-large btn-open"
+        onClick={formButtonClickHandler}
+      >
+        {showForm ? "Close" : "Share a fact"}
+      </button>
+    </header>
+  );
+};
+
+const NewFactForm = ({ onAddFact }) => {
+  const [text, setText] = useState("");
+  const [source, setSource] = useState("");
+  const [category, setCategory] = useState("");
+
+  const changeTextHandler = (event) => {
+    setText(event.target.value);
+  };
+
+  const changeSourceHandler = (event) => {
+    setSource(event.target.value);
+  };
+
+  const changeCategoryHandler = (event) => {
+    setCategory(event.target.value);
+  };
+
+  const submitFormHandler = (event) => {
+    event.preventDefault();
+    const newFact = {
+      id: initialFacts.length,
+      text: text,
+      source: source,
+      category: category,
+      votesInteresting: 0,
+      votesMindblowing: 0,
+      votesFalse: 0,
+      createdIn: Date.now(),
+    };
+    onAddFact(newFact);
+  };
+
+  return (
+    <form className="fact-form" onSubmit={submitFormHandler}>
+      <input
+        type="text"
+        placeholder="Share a fact with the world..."
+        value={text}
+        onChange={changeTextHandler}
+      />
+      <span>{200 - text.length}</span>
+      <input
+        type="text"
+        placeholder="Trustworthy source..."
+        value={source}
+        onChange={changeSourceHandler}
+      />
+      <select value={category} onChange={changeCategoryHandler}>
+        <option value="">Choose category:</option>
+        {CATEGORIES.map((CATEGORY) => (
+          <option key={CATEGORY.name} value={CATEGORY.name}>
+            {CATEGORY.name}
+          </option>
+        ))}
+      </select>
+      <button type="submit" className="btn btn-large">
+        Post
+      </button>
+    </form>
+  );
+};
 
 const CategoryFilter = () => {
   return (
@@ -85,60 +159,61 @@ const CategoryFilter = () => {
         <li>
           <button className="btn btn-all-categories">All</button>
         </li>
-        {
-          CATEGORIES.map(cat =>
-            <li key={cat.name} className="category">
-              <button
-                className="btn btn-category"
-                style={{ backgroundColor: cat.color }}
-              >
-                {cat.name}
-              </button>
-            </li>
-          )
-        }
+        {CATEGORIES.map((cat) => (
+          <li key={cat.name} className="category">
+            <button
+              className="btn btn-category"
+              style={{ backgroundColor: cat.color }}
+            >
+              {cat.name}
+            </button>
+          </li>
+        ))}
       </ul>
     </aside>
-  )
-}
+  );
+};
 
-const FactList = () => {
-  const facts = initialFacts
+const FactList = ({ facts }) => {
   return (
     <section>
       <ul className={"fact-list"}>
-        {
-          facts.map(fact =>
-            <Fact key={fact.id} fact={fact} />
-          )
-        }
+        {facts.map((fact) => (
+          <Fact key={fact.id} fact={fact} />
+        ))}
       </ul>
       <p>There are {facts.length} facts in the database. Add your own!</p>
     </section>
-  )
-}
+  );
+};
 
-const Fact = props => {
-  const fact = props.fact
+const Fact = (props) => {
+  const fact = props.fact;
   return (
     <li className={"fact"}>
       <p>
         {fact.text}
-        <a href={fact.source} className="source" target={"_blank"}>(Source)</a>
+        <a href={fact.source} className="source" target={"_blank"}>
+          (Source)
+        </a>
       </p>
       <span
         className="tag"
-        style={{ backgroundColor: `${CATEGORIES.find(cat => cat.name === fact.category).color}` }}
+        style={{
+          backgroundColor: `${
+            CATEGORIES.find((cat) => cat.name === fact.category).color
+          }`,
+        }}
       >
-              #technology#
-            </span>
+        #technology#
+      </span>
       <div className="vote-buttons">
         <button>👍 {fact.votesInteresting}</button>
         <button>🤯 {fact.votesMindblowing}</button>
         <button>⛔ {fact.votesFalse}</button>
       </div>
     </li>
-  )
-}
+  );
+};
 
 export default App;
