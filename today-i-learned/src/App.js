@@ -290,6 +290,7 @@ const FactList = ({ facts }) => {
 const Fact = (props) => {
   const [ fact, setFact ] = useState(props.fact);
   const [isUpdating, setIsUpdating] = useState(false)
+  const isDisputed = fact.votesInteresting + fact.votesMindblowing < fact.votesFalse
 
   const handleVotes = async (columnName) => {
     setIsUpdating(true)
@@ -308,6 +309,7 @@ const Fact = (props) => {
   return (
     <li className={"fact"}>
       <p>
+        {isDisputed ? <span className={"disputed"}>[DISPUTED]</span> : null}
         {fact.text}
         <a
           href={fact.source}
