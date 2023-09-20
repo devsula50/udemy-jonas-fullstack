@@ -25,10 +25,10 @@
           />
           <h1>Today I Learned</h1>
         </div>
-        <button class="btn btn-large">Share a fact</button>
+        <button class="btn btn-large btn-open">Share a fact</button>
       </header>
 
-      <form class="fact-form">
+      <form class="fact-form hidden">
         <input type="text" placeholder="Share a fact with the world..." />
         <span>200</span>
         <input type="text" placeholder="Trustworthy source..." />
@@ -57,7 +57,7 @@
         </aside>
 
         <section>
-          <ul>
+          <ul class="fact-list">
             <li class="fact">
               <p>React is being developed by Meta (formerly facebook)
                 <a href="https://opensource.fb.com/" class="source">(Source)</a>
@@ -65,7 +65,7 @@
               <span class="tag" style="background-color: #3b82f6">#technology#</span>
               <div class="vote-buttons">
                 <button>👍 24</button>
-                <button>💢 9</button>
+                <button>🤯 9</button>
                 <button>⛔ 4</button>
               </div>
             </li>
@@ -83,7 +83,7 @@
               <span class="tag" style="background-color: #16a34a">#society#</span>
               <div class="vote-buttons">
                 <button>👍 15</button>
-                <button>💢 8</button>
+                <button>🤯 8</button>
                 <button>⛔ 2</button>
               </div>
             </li>
@@ -91,5 +91,7 @@
         </section>
       </main>
     </div>
+
+    <script src="script.js"></script>
   </body>
 </html>
