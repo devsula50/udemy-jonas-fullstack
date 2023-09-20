@@ -52,6 +52,7 @@ const App = () => {
   const [facts, setFacts] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [isLoading, setIsLoading] = useState(true)
+  const [currentCategory, setCurrentCategory] = useState("all")
 
   useEffect(() => {
     (async () => {
@@ -88,7 +89,7 @@ const App = () => {
         />
       ) : null}
       <main className={"main"}>
-        <CategoryFilter/>
+        <CategoryFilter setCurrentCategory={setCurrentCategory}/>
         {isLoading ?
           <Loader/> :
           <FactList facts={facts}/>}
@@ -211,7 +212,7 @@ const NewFactForm = ({onAddFact, showForm, setShowForm}) => {
   );
 };
 
-const CategoryFilter = () => {
+const CategoryFilter = ({setCurrentCategory}) => {
   return (
     <aside>
       <ul>
