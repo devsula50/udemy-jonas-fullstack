@@ -87,27 +87,37 @@ const FactList = () => {
   return (
     <section>
       <ul className={"fact-list"}>
-        {facts.map(fact => (
-          <li key={fact.id} className={"fact"}>
-            <p>
-              {fact.text}
-              <a href={fact.source} className="source" target={"_blank"}>(Source)</a>
-            </p>
-            <span
-              className="tag"
-              style={{ backgroundColor: `${CATEGORIES.find(cat => cat.name === fact.category).color}` }}
-            >
+        {
+          facts.map(fact =>
+            <Fact key={fact.id} fact={fact} />
+          )
+        }
+      </ul>
+      <p>There are {facts.length} facts in the database. Add your own!</p>
+    </section>
+  )
+}
+
+const Fact = props => {
+  const fact = props.fact
+  return (
+    <li className={"fact"}>
+      <p>
+        {fact.text}
+        <a href={fact.source} className="source" target={"_blank"}>(Source)</a>
+      </p>
+      <span
+        className="tag"
+        style={{ backgroundColor: `${CATEGORIES.find(cat => cat.name === fact.category).color}` }}
+      >
               #technology#
             </span>
-            <div className="vote-buttons">
-              <button>👍 {fact.votesInteresting}</button>
-              <button>🤯 {fact.votesMindblowing}</button>
-              <button>⛔ {fact.votesFalse}</button>
-            </div>
-          </li>
-        ))}
-      </ul>
-    </section>
+      <div className="vote-buttons">
+        <button>👍 {fact.votesInteresting}</button>
+        <button>🤯 {fact.votesMindblowing}</button>
+        <button>⛔ {fact.votesFalse}</button>
+      </div>
+    </li>
   )
 }
 
