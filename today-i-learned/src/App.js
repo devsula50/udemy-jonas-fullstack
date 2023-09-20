@@ -1,16 +1,17 @@
-import React, { useState } from "react";
+import React, {useEffect, useState} from "react";
 
 import "./style.css";
+import supabase from "./supabase";
 
 const CATEGORIES = [
-  { name: "technology", color: "#3b82f6" },
-  { name: "science", color: "#16a34a" },
-  { name: "finance", color: "#ef4444" },
-  { name: "society", color: "#eab308" },
-  { name: "entertainment", color: "#db2777" },
-  { name: "health", color: "#14b8a6" },
-  { name: "history", color: "#f97316" },
-  { name: "news", color: "#8b5cf6" },
+  {name: "technology", color: "#3b82f6"},
+  {name: "science", color: "#16a34a"},
+  {name: "finance", color: "#ef4444"},
+  {name: "society", color: "#eab308"},
+  {name: "entertainment", color: "#db2777"},
+  {name: "health", color: "#14b8a6"},
+  {name: "history", color: "#f97316"},
+  {name: "news", color: "#8b5cf6"},
 ];
 
 const initialFacts = [
@@ -48,8 +49,25 @@ const initialFacts = [
 ];
 
 const App = () => {
-  const [facts, setFacts] = useState([...initialFacts]);
+  const [facts, setFacts] = useState([]);
   const [showForm, setShowForm] = useState(false);
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    (async () => {
+      setIsLoading(true)
+      let {data: result, error} = await supabase
+        .from("facts")
+        .select("*")
+        .order('votesInteresting', {ascending: false})
+        .limit(1000);
+
+      if (!error) setFacts(facts)
+      else alert("There was a problem getting data")
+      setFacts(result);
+      setIsLoading(false)
+    })()
+  }, []);
 
   const addFactHandler = (newFact) => {
     // setFacts((prevFacts) => [...prevFacts, newFact]);
@@ -61,7 +79,7 @@ const App = () => {
 
   return (
     <>
-      <Header showForm={showForm} setShowForm={setShowForm} />
+      <Header showForm={showForm} setShowForm={setShowForm}/>
       {showForm ? (
         <NewFactForm
           onAddFact={addFactHandler}
@@ -70,14 +88,20 @@ const App = () => {
         />
       ) : null}
       <main className={"main"}>
-        <CategoryFilter />
-        <FactList facts={facts} />
+        <CategoryFilter/>
+        {isLoading ?
+          <Loader/> :
+          <FactList facts={facts}/>}
       </main>
     </>
   );
 };
 
-const Header = ({ showForm, setShowForm }) => {
+const Loader = () => {
+  return <p className={"message"}>Loading...</p>
+}
+
+const Header = ({showForm, setShowForm}) => {
   const appTitle = "Today I Learned";
 
   const formButtonClickHandler = () => {
@@ -86,7 +110,7 @@ const Header = ({ showForm, setShowForm }) => {
   return (
     <header className="header">
       <div className="logo">
-        <img src="logo.png" alt="Today I Learned Logo" />
+        <img src="logo.png" alt="Today I Learned Logo"/>
         <h1>{appTitle}</h1>
       </div>
       <button
@@ -111,7 +135,7 @@ function isValidHttpUrl(string) {
   return url.protocol === "http:" || url.protocol === "https:";
 }
 
-const NewFactForm = ({ onAddFact, showForm, setShowForm }) => {
+const NewFactForm = ({onAddFact, showForm, setShowForm}) => {
   const [text, setText] = useState("");
   const [source, setSource] = useState("");
   const [category, setCategory] = useState("");
@@ -198,7 +222,7 @@ const CategoryFilter = () => {
           <li key={cat.name} className="category">
             <button
               className="btn btn-category"
-              style={{ backgroundColor: cat.color }}
+              style={{backgroundColor: cat.color}}
             >
               {cat.name}
             </button>
@@ -209,12 +233,12 @@ const CategoryFilter = () => {
   );
 };
 
-const FactList = ({ facts }) => {
+const FactList = ({facts}) => {
   return (
     <section>
       <ul className={"fact-list"}>
         {facts.map((fact) => (
-          <Fact key={fact.id} fact={fact} />
+          <Fact key={fact.id} fact={fact}/>
         ))}
       </ul>
       <p>There are {facts.length} facts in the database. Add your own!</p>
