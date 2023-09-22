@@ -7,8 +7,8 @@
 body {
   background-color: #292524;
   color: #fafaf9;
-  font-family: 'Sono', sans-serif;
-  padding: 48px 64px 0px;
+  font-family: "Sono", sans-serif;
+  padding: 48px 64px;
 }
 
 .hidden {
@@ -23,14 +23,8 @@ body {
   margin-top: 24px;
 }
 
-.disputed {
-  color: #ef4444;
-  font-weight: 600;
-  margin-right: 10px;
-}
-
 /* MAIN LAYOUT */
-#root {
+.container {
   max-width: 1500px;
   margin: 0 auto;
 }
@@ -38,82 +32,60 @@ body {
 .header {
   margin-bottom: 40px;
   display: flex;
-  align-items: center;
   justify-content: space-between;
+  align-items: center;
+}
+
+.fact-form {
+  background-color: #44403c;
+  margin-bottom: 40px;
+  padding: 16px 40px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-radius: 16px;
 }
 
 .main {
   display: grid;
   grid-template-columns: 250px 1fr;
   gap: 48px;
-
-  height: calc(100vh - 48px - 68px - 40px);
 }
 
 @media (max-width: 900px) {
   .main {
     grid-template-columns: 1fr;
-    /* Fixed in a video text overlay, to fix scrolling issue on small screens */
-    height: auto;
   }
 }
 
-section {
-  overflow: scroll;
-  padding-bottom: 40px;
-}
-
 /* ELEMENTS */
-
 .logo {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
 }
 
 .logo img {
-  width: 68px;
   height: 68px;
+  width: 68px;
 }
 
 h1 {
   font-size: 42px;
   text-transform: uppercase;
-  font-family: 'Coiny', sans-serif;
+  font-family: "Coiny", sans-serif;
   line-height: 1;
-  margin-top: 6px;
+  margin-bottom: 6px;
 }
 
 .category {
   margin-bottom: 16px;
 }
 
-.fact {
-  font-size: 20px;
-  line-height: 1.4;
-  background-color: #44403c;
-  margin-bottom: 16px;
-  padding: 16px 24px;
-  letter-spacing: -1px;
-  border-radius: 16px;
-
-  display: flex;
-  align-items: center;
-  gap: 24px;
-}
-
-@media (max-width: 1200px) {
-  .fact {
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 12px;
-  }
-}
-
 .tag {
   text-transform: uppercase;
   font-size: 14px;
-  font-family: 'Coiny', sans-serif;
+  font-family: "Coiny", sans-serif;
   padding-top: 3px;
   padding-left: 10px;
   padding-right: 10px;
@@ -168,16 +140,17 @@ ul {
 
 .btn {
   border: none;
-  font-family: 'Coiny', sans-serif;
+  font-family: "Coiny", sans-serif;
   line-height: 1;
   text-transform: uppercase;
   font-size: 17px;
   padding: 16px 0 13px;
-  background-image: linear-gradient(135deg, #3b82f6, #ef4444, #16a34a, #eab308);
+  background-image: linear-gradient(to right,
+  #3b82f6, #ef4444, #16a34a, #eab308);
   color: inherit;
   border-radius: 100px;
   cursor: pointer;
-  transition: 0.3s;
+  transition: 0.3s
 }
 
 .btn:hover {
@@ -185,7 +158,7 @@ ul {
 }
 
 .btn-large {
-  font-size: 20px;
+  font-size: 30px;
   padding: 20px 32px 17px;
 }
 
@@ -200,14 +173,26 @@ ul {
 }
 
 /* FORM */
-.fact-form {
+.fact {
+  font-size: 20px;
+  line-height: 1.4;
   background-color: #44403c;
-  margin-bottom: 40px;
-  padding: 16px 32px;
+  margin-bottom: 16px;
+  padding: 16px 24px;
+  letter-spacing: -1px;
+  border-radius: 16px;
+
   display: flex;
   align-items: center;
-  gap: 16px;
-  border-radius: 16px;
+  gap: 24px;
+}
+
+@media (max-width: 1200px) {
+  .fact {
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px
+  }
 }
 
 .fact-form input,
@@ -236,9 +221,10 @@ ul {
   margin-right: 18px;
 }
 
+
 @media (max-width: 1000px) {
   body {
-    /* padding: 32px 48px; */
+    padding: 32px 48px;
   }
 
   .fact-form {
